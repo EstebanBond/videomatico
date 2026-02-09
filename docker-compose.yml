@@ -1,0 +1,28 @@
+services:
+  videomatico-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: videomatico-app
+    restart: always
+    # Persistencia de los videos generados y assets
+    volumes:
+      - ./assets/outputs:/app/assets/outputs
+      - ./assets/audio:/app/assets/audio
+    env_file:
+      - .env
+    networks:
+      - web_network
+    labels:
+      - "traefik.enable=true"
+      # Definimos el subdominio
+      - "traefik.http.routers.videomatico.rule=Host(`videomatico.sikno.com.mx`)"
+      - "traefik.http.routers.videomatico.entrypoints=websecure"
+      - "traefik.http.routers.videomatico.tls=true"
+      - "traefik.http.routers.videomatico.tls.certresolver=myresolver"
+      # Puerto interno  contenedor FastAPI
+      - "traefik.http.services.videomatico.loadbalancer.server.port=8000"
+
+networks:
+  web_network:
+    external: true
