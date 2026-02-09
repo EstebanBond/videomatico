@@ -5,7 +5,7 @@ from moviepy import VideoFileClip, TextClip, ImageClip, ColorClip, CompositeVide
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOCAL_FONT = os.path.join(BASE_DIR, "assets", "fonts", "arial.ttf")
 
-def create_lsm_video(word: str, input_path: str, output_path: str):
+def build_esentia_engine(word: str, input_path: str, output_path: str):
     W, H = 1080, 1920
     
     # Clip base
