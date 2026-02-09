@@ -9,7 +9,7 @@ Motor de orquestación para campañas de **Hiper-Personalización** desarrollado
 * **Environment Management:** UV (Astral)
 * **DevOps:** Docker & Cloud-ready para DigitalOcean
 
-## 🛠️ Arquitectura de "Grandes Ligas"
+## 🛠️ Arquitectura Enterprise
 - **Procesamiento Asíncrono:** Uso de `BackgroundTasks` para evitar el bloqueo del event loop durante el renderizado de video pesado.
 - **Aislamiento de Recursos:** Inyección dinámica de assets (fuentes, logos) para garantizar la portabilidad en sistemas de archivos restringidos (Read-only systems).
 - **Escalabilidad:** Estructura modular preparada para migrar a una arquitectura de Workers (Redis/Celery).
