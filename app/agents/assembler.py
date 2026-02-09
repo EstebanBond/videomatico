@@ -1,6 +1,7 @@
 from app.models.state import GraphState
 from app.services.video_engine import build_esentia_engine
 import asyncio
+import os
 
 async def assembler_node(state: GraphState):
     """
@@ -30,8 +31,8 @@ async def assembler_node(state: GraphState):
         )
         
         return {
-            "final_video_path": final_path,
-            "status": "completed"
+                    "video_url": f"/assets/outputs/{os.path.basename(final_path)}",
+                    "status": "completed"
         }
         
     except Exception as e:
