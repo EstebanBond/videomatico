@@ -17,3 +17,5 @@ wheels/
 *.mp4
 assets/outputs/
 temp_*
+assets/audio/*
+assets/inputs/scene_*

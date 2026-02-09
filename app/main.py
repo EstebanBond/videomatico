@@ -1,20 +1,31 @@
 from fastapi import FastAPI, BackgroundTasks
-from app.services.video_engine import create_lsm_video
-import uuid
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+from app.core.graph import esentia_graph
 
-app = FastAPI(title="Sikno Video Automator")
-
-@app.post("/generate-video/{word}")
-async def generate_video(word: str, background_tasks: BackgroundTasks):
-    job_id = str(uuid.uuid4())
-    input_file = "assets/inputs/cuantocuesta.mp4"
-    output_file = f"assets/outputs/video_{job_id}.mp4"
-    
-    # Ejecutamos en segundo plano para no bloquear la API
-    background_tasks.add_task(create_lsm_video, word, input_file, output_file)
-    
-    return {"message": "Procesando video", "job_id": job_id, "word": word}
+app = FastAPI(title="Videomatico")
 
 @app.get("/")
-def read_root():
-    return {"status": "Online", "engine": "MoviePy + FastAPI"}
+async def read_index():
+    return FileResponse('app/static/index.html')
+
+@app.post("/generate-esentia-ad/")
+async def generate_ad():
+    # Iniciamos el grafo con un estado vacío
+    initial_state = {
+        "project_data": None,
+        "image_paths": [],
+        "audio_path": None,
+        "final_video_path": None,
+        "status": "starting"
+    }
+    
+    # Ejecutamos la orquestación de agentes
+    result = await esentia_graph.ainvoke(initial_state)
+    
+    return {
+        "message": "Video de esentia generado con éxito",
+        "video_url": result["final_video_path"],
+        "status": result["status"]
+    }
