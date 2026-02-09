@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>esentia | AI Video Engine</title>
+    <style>
+        body { background: #1a1a1a; color: gold; font-family: 'Montserrat', sans-serif; text-align: center; padding: 50px; }
+        .btn { background: gold; color: black; padding: 15px 30px; border: none; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
+        #loader { display: none; margin-top: 20px; }
+        #video-result { display: none; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>esentia</h1>
+    <p>Generador de Campañas de Lujo con IA</p>
+    <button class="btn" onclick="generateVideo()">GENERAR ANUNCIO PREMIUM</button>
+    
+    <div id="loader">💎 Orquestando Agentes y Renderizando... (esto toma ~1 min)</div>
+    
+    <div id="video-result">
+        <h3>¡Tu video está listo!</h3>
+        <video id="player" width="320" height="560" controls></video>
+        <br>
+        <a id="download-link" href="#" download style="color: white;">Descargar MP4</a>
+    </div>
+
+    <script>
+        async function generateVideo() {
+            document.getElementById('loader').style.display = 'block';
+            const response = await fetch('/generate-esentia-ad/', { method: 'POST' });
+            const data = await response.json();
+            
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('video-result').style.display = 'block';
+            document.getElementById('player').src = "/" + data.video_url;
+            document.getElementById('download-link').href = "/" + data.video_url;
+        }
+    </script>
+</body>
+</html>

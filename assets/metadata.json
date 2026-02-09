@@ -1,0 +1,12 @@
+{
+  "project_name": "Sikno_Luxury_Line",
+  "audio_music": "assets/music/punchy_luxury.mp3",
+  "voice_text": "Descubre la nueva colección Sikno. Elegancia técnica para el mundo moderno.",
+  "scenes": [
+    {"video": "envato_1.mp4", "text": "CALIDAD", "duration": 2},
+    {"video": "envato_2.mp4", "text": "DISEÑO", "duration": 2},
+    {"video": "envato_3.mp4", "text": "ROBÓTICA", "duration": 2},
+    {"video": "envato_4.mp4", "text": "FUTURO", "duration": 3},
+    {"video": "envato_5.mp4", "text": "FUTURO", "duration": 3}
+  ]
+}
