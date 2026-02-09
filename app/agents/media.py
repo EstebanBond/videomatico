@@ -59,9 +59,16 @@ async def generate_voiceover_task(text_list: list):
     return path
 
 async def media_node(state: GraphState):
-    project = state["project_data"]
+    project = state.get("project_data")
     
-    # Extraemos los datos del proyecto generado por Gemini
+    # 🚨 VALIDACIÓN DE SEGURIDAD (Nivel Senior)
+    if project is None:
+        print("❌ ERROR: El Director Creativo no generó datos del proyecto.")
+        return {
+            "error_message": "El agente creativo falló al generar el guion.",
+            "status": "failed"
+        }
+
     scenes = project.scenes
     voice_texts = [s.voiceover_text for s in scenes]
     

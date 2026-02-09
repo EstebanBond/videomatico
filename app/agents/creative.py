@@ -2,6 +2,7 @@ import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from app.models.state import GraphState, VideoProjectSchema
 
+
 # Inicializamos Gemini 1.5 Flash
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
@@ -41,7 +42,5 @@ async def creative_node(state: GraphState):
             "status": "creative_script_generated"
         }
     except Exception as e:
-        return {
-            "error_message": f"Error en Agente Creativo: {str(e)}",
-            "status": "failed"
-        }
+            print(f"❌ Error en Gemini: {str(e)}")
+            return {"project_data": None, "status": "failed"}
