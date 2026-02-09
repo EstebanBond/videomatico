@@ -7,7 +7,7 @@ from app.models.state import GraphState
 
 # Inicialización de servicios de Google Cloud
 # Nota: Asegúrate de tener configuradas tus credenciales de Google Cloud
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "tu-archivo-de-credenciales.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/google-auth.json"
 
 async def generate_image_task(prompt: str, scene_num: int):
     """Tarea asíncrona para generar una imagen con Imagen 3 en Vertex AI."""

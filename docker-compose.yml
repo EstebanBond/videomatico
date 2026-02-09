@@ -7,8 +7,8 @@ services:
     restart: always
     # Persistencia de los videos generados y assets
     volumes:
-      - ./assets/outputs:/app/assets/outputs
-      - ./assets/audio:/app/assets/audio
+      - ./assets:/app/assets
+      - ./google-auth.json:/app/google-auth.json
     env_file:
       - .env
     networks:

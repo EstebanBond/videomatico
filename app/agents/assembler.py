@@ -36,7 +36,10 @@ async def assembler_node(state: GraphState):
         }
         
     except Exception as e:
-        return {
-            "error_message": f"Error en Agente de Ensamblaje: {str(e)}",
-            "status": "failed"
-        }
+            # AGREGAR ESTA LÍNEA PARA VER EL ERROR REAL EN DOCKER LOGS
+            print(f"❌ ERROR REAL EN EL MOTOR DE VIDEO: {str(e)}")
+            return {
+                "error_message": f"Error en Agente de Ensamblaje: {str(e)}",
+                "status": "failed",
+                "video_url": None # Aseguramos que sea None para el check de main.py
+            }
