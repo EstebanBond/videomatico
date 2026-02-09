@@ -2,21 +2,21 @@ import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from app.models.state import GraphState, VideoProjectSchema
 
+# Inicializamos modelo de LangChain
 
-# Inicializamos Gemini 1.5 Flash
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
-    temperature=0.7,  # Un toque de creatividad sin perder el control
+    temperature=0.7,
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
-# Configuramos LLM -  formato JSON
+# Configuramos LLM para JSON estructurado
 structured_llm = llm.with_structured_output(VideoProjectSchema)
 
 async def creative_node(state: GraphState):
-    print("Agente Creativo: Diseñando la campaña de esentia...")
+    print("🧠 Agente Creativo: Diseñando la campaña de esentia...")
     
-    prompt = f"""
+    prompt = """
     Actúa como un Director Creativo Senior para 'esentia', una marca de lujo de fragancias ambientales.
     
     Tu misión es diseñar un video vertical de 5 escenas que evoque:
@@ -33,14 +33,17 @@ async def creative_node(state: GraphState):
     """
 
     try:
-        # Ejecución asíncrona antibloqueo
+        # Ejecución asíncrona
         response = await structured_llm.ainvoke(prompt)
         
-        # Actualizamos el estado con la creatividad generada
+        print("✅ Guion generado exitosamente por Gemini.")
         return {
             "project_data": response,
             "status": "creative_script_generated"
         }
     except Exception as e:
-            print(f"❌ Error en Gemini: {str(e)}")
-            return {"project_data": None, "status": "failed"}
+        print(f"❌ Error en Gemini: {str(e)}")
+        return {
+            "project_data": None, 
+            "status": "failed"
+        }
