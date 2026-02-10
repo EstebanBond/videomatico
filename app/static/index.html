@@ -69,13 +69,21 @@
             width: 85%;
             max-width: 420px;
             padding: 50px 40px;
-            border-radius: 2px; /* Bordes más rectos para look más arquitectónico */
+            border-radius: 2px;
             text-align: center;
+            
+            /* 1. CAMBIO CLAVE: Usamos un blanco con poquísima opacidad */
+            background: rgba(255, 255, 255, 0.03); 
+            
+            /* 2. El desenfoque hará el resto del trabajo para que se note el cristal */
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            background: rgba(0, 0, 0, 0.4); /* Más oscuro para que el grano del fondo luzca más */
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            
+            /* 3. Borde sutil para definir los límites */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            /* 4. Sombra para separarlo del fondo */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         /* --- CABECERA --- */
