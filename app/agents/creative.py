@@ -22,6 +22,9 @@ async def creative_node(state: GraphState):
     IMPORTANTE PARA LA SEGURIDAD:
     - No uses palabras que puedan interpretarse como contenido sensual o humano explícito.
     - Enfócate en objetos: botellas de perfume, madera de cedro, texturas de cuero, luz ambiental.
+    - No menciones 'piel humana', 'cuerpos' o 'sensualidad'. 
+    - Describe solo objetos inanimados: 'superficie de cuero sintético oscuro', 'bloque de madera tallada', 'frasco de cristal ahumado'.
+    - Usa 'iluminación de estudio' y 'estética de bodegón publicitario'.
     - Los image_prompts deben ser puramente descriptivos de arquitectura y diseño de interiores.
     
     Tu misión es diseñar un video vertical de 5 escenas para un video de fragancias de lujo, que evoque:

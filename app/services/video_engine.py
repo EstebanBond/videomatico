@@ -1,6 +1,7 @@
 import os
 from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips, vfx
 from moviepy.audio.AudioClip import CompositeAudioClip
+from moviepy.video.fx import fadein, fadeout
 
 # Configuración de rutas
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -15,12 +16,18 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
     
     voice_audio = AudioFileClip(audio_path)
     total_duration = voice_audio.duration
+
+    # Filtramos paths nulos (por si DALL-E bloqueó algo)
+    valid_images = [p for p in image_paths if p is not None]
+    if not valid_images:
+        raise ValueError("No hay imágenes válidas para procesar")
+
     duration_per_clip = total_duration / len(image_paths)
     
     clips = []
     for i, img_path in enumerate(image_paths):
         # Extraemos la keyword generada por Gemini
-        keyword = project_data.scenes[i].overlay_text if hasattr(project_data.scenes[i], 'overlay_text') else "ESENTIA"
+        keyword = project_data.scenes[i].overlay_text if i < len(project_data.scenes) else "ESENTIA"
         
         # --- EFECTO KEN BURNS (ZOOM SUAVE) ---
         # Definimos una función de redimensionado que crece un 10% durante la escena
@@ -30,8 +37,9 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                             .resized(lambda t: 1 + 0.04 * t)
                             .with_duration(duration_per_clip))
         
-        # Aplicamos fadein y fadeout usando la nueva sintaxis .fx
-        img_clip = img_clip.fx(vfx.fadein, 0.5).fx(vfx.fadeout, 0.5)
+        # Aplicamos fadein y fadeout usando la nueva sintaxis vfx.
+        img_clip = vfx.fadein(img_clip, 0.5)
+        img_clip = vfx.fadeout(img_clip, 0.5)
 
         # --- POWER WORD (SUBTÍTULO LUXURY) ---
         txt_word = (TextClip(
