@@ -1,7 +1,6 @@
 import os
 from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips, vfx
 from moviepy.audio.AudioClip import CompositeAudioClip
-from moviepy.video.fx import fadein, fadeout
 
 # Configuración de rutas
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
