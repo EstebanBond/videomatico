@@ -17,23 +17,40 @@
         }
 
         body {
-            margin: 0;
-            height: 100vh;
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg-deep);
-            color: var(--accent-white);
-            overflow: hidden;
+                margin: 0;
+                height: 100vh;
+                font-family: 'Montserrat', sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #000; /* Fondo base */
+                overflow: hidden;
         }
 
-        /* --- CAPAS DE FONDO --- */
-        .bg-gradient {
+/* --- CAPA ÚNICA DE FONDO CON MEZCLA --- */
+        .bg-main {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
+        /* 1. Cargamos el grano y el degradado juntos */
+        background-image: 
+            url('Background_Grain.jpg'), 
+            radial-gradient(circle at center, #222222 0%, #000000 100%);
+        
+        /* 2. El truco maestro: Mezclamos la imagen con el color */
+        /* 'overlay' hace que el grano resalte sobre los grises */
+        background-blend-mode: overlay;
+        
+        /* 3. Ajuste de escala para que el grano no se vea pixelado */
+        background-size: 500px auto, cover; /* El grano se repite pequeño para más nitidez */
+        background-repeat: repeat, no-repeat;
+        
+        /* 4. Opacidad controlada */
+        opacity: 0.4; /* Ahora podemos subirla más porque se mezcla mejor */
+
         }
 
         .bg-grain {
@@ -54,11 +71,11 @@
             padding: 50px 40px;
             border-radius: 2px; /* Bordes más rectos para look más arquitectónico */
             text-align: center;
-            background: var(--glass-bg);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4); /* Más oscuro para que el grano del fondo luzca más */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
         }
 
         /* --- CABECERA --- */
