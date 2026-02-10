@@ -2,39 +2,203 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>esentia | AI Video Engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esentia Engine | AI Video Production</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #1a1a1a; color: gold; font-family: 'Montserrat', sans-serif; text-align: center; padding: 50px; }
-        .btn { background: gold; color: black; padding: 15px 30px; border: none; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
-        #loader { display: none; margin-top: 20px; }
-        #video-result { display: none; margin-top: 30px; }
+        /* --- PALETA MONOCROMÁTICA --- */
+        :root {
+            --bg-deep: #0a0a0a;
+            --accent-white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #888888;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-deep);
+            color: var(--accent-white);
+            overflow: hidden;
+        }
+
+        /* --- CAPAS DE FONDO --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        .bg-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('Background_Grain.jpg'); /* O .png según tu archivo */
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- TARJETA DE CRISTAL (GLASSMORPHISM) --- */
+        .glass-card {
+            position: relative;
+            z-index: 1;
+            width: 85%;
+            max-width: 420px;
+            padding: 50px 40px;
+            border-radius: 2px; /* Bordes más rectos para look más arquitectónico */
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- CABECERA --- */
+        .logo-section h1 {
+            font-weight: 200;
+            font-size: 1.8rem;
+            letter-spacing: 8px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .logo-section .bold {
+            font-weight: 700;
+        }
+        .logo-section p {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            opacity: 0.5;
+            margin-bottom: 50px;
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 16px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background: var(--accent-white);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: var(--gray-light);
+            letter-spacing: 4px; /* Efecto de expansión elegante */
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--accent-white);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent-white);
+        }
+
+        /* --- ESTADOS --- */
+        .hidden { display: none; }
+
+        .loader {
+            margin: 30px auto;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--accent-white);
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-text {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
-    <h1>esentia</h1>
-    <p>Generador de Campañas de Lujo con IA</p>
-    <button class="btn" onclick="generateVideo()">GENERAR ANUNCIO PREMIUM</button>
-    
-    <div id="loader">💎 Orquestando Agentes y Renderizando... (esto toma ~1 min)</div>
-    
-    <div id="video-result">
-        <h3>¡Tu video está listo!</h3>
-        <video id="player" width="320" height="560" controls></video>
-        <br>
-        <a id="download-link" href="#" download style="color: white;">Descargar MP4</a>
+    <div class="bg-gradient"></div>
+    <div class="bg-grain"></div>
+
+    <div class="glass-card">
+        <div class="logo-section">
+            <h1>Esentia <span class="bold">AI</span></h1>
+            <p>Cinematic Production Engine</p>
+        </div>
+
+        <div id="ui-start">
+            <button id="mainAction" class="btn btn-primary">Create Campaign</button>
+        </div>
+
+        <div id="ui-loading" class="hidden">
+            <div class="loader"></div>
+            <p id="loading-msg" class="status-text">Analyzing Concept...</p>
+        </div>
+
+        <div id="ui-success" class="hidden">
+            <p class="status-text" style="margin-bottom: 30px; opacity: 1;">Project Complete</p>
+            
+            <a href="https://videomatico.sikno.com.mx/assets/outputs/esentia_final_ad.mp4" 
+               download class="btn btn-secondary">Download Master</a>
+            
+            <a href="https://videomatico.sikno.com.mx/assets/outputs/esentia_final_ad.mp4" 
+               target="_blank" class="btn btn-primary">Watch Film</a>
+        </div>
     </div>
 
     <script>
-        async function generateVideo() {
-            document.getElementById('loader').style.display = 'block';
-            const response = await fetch('/generate-esentia-ad/', { method: 'POST' });
-            const data = await response.json();
-            
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('video-result').style.display = 'block';
-            document.getElementById('player').src = "/" + data.video_url;
-            document.getElementById('download-link').href = "/" + data.video_url;
-        }
+        const btn = document.getElementById('mainAction');
+        const msg = document.getElementById('loading-msg');
+        
+        const steps = [
+            "Generating Script...",
+            "Synthesizing Visuals...",
+            "Vocal Engineering...",
+            "Final Rendering..."
+        ];
+
+        btn.addEventListener('click', () => {
+            document.getElementById('ui-start').classList.add('hidden');
+            document.getElementById('ui-loading').classList.remove('hidden');
+
+            let i = 0;
+            const interval = setInterval(() => {
+                msg.textContent = steps[i];
+                i++;
+                if(i >= steps.length) clearInterval(interval);
+            }, 5000);
+
+            // Simulación de éxito
+            setTimeout(() => {
+                document.getElementById('ui-loading').classList.add('hidden');
+                document.getElementById('ui-success').classList.remove('hidden');
+            }, 20000); // Ajusta según el tiempo real de tu servidor
+        });
     </script>
 </body>
 </html>
