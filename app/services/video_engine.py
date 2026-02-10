@@ -71,7 +71,7 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                             text=palabra, 
                             font_size=tamanio_fuente, 
                             color='white', 
-                            font=FONT_LIGHT,
+                            font=FONT_BOLD,
                             size=(int(W * 0.8), int(tamanio_fuente * 1.4)),
                             text_align='center'
                         )
