@@ -55,20 +55,40 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
     
     video_base = concatenate_videoclips(clips, method="compose")
     
-    # 2. Mezcla de Audio (Locución + Música de Envato)
+# --- 2. MEZCLA DE AUDIO (Locución + Música de Envato) ---
+    print(f"🎵 Buscando música en: {BG_MUSIC}")
+    
     if os.path.exists(BG_MUSIC):
-        bg_audio = (AudioFileClip(BG_MUSIC)
-                    .with_volume_scaled(0.10) # Música suave de fondo
-                    .with_duration(total_duration))
-        final_audio = CompositeAudioClip([voice_audio, bg_audio])
+        print("✅ Música encontrada. Mezclando pistas...")
+        try:
+            # Cargamos la música
+            bg_audio = AudioFileClip(BG_MUSIC)
+            
+            # Ajustes pro:
+            # 1. Subimos volumen al 25% (0.25) para que se note
+            # 2. La hacemos loopear si es más corta que el video
+            # 3. La cortamos exactamente a la duración del video
+            bg_audio = (bg_audio
+                        .with_volume_scaled(0.25) 
+                        .with_duration(total_duration)) 
+            
+            # Mezclamos locución + música
+            final_audio = CompositeAudioClip([voice_audio, bg_audio])
+            print("🔊 Audio compuesto exitosamente.")
+        except Exception as e:
+            print(f"⚠️ Error procesando la música: {e}")
+            final_audio = voice_audio
     else:
+        print(f"❌ ADVERTENCIA: No se encontró música en {BG_MUSIC}. Usando solo voz.")
         final_audio = voice_audio
 
     # 3. Logo en posición baja (Safe Area)
     logo = (ImageClip(LOGO_PATH)
             .resized(height=90)
             .with_position(('center', H - 160))
-            .with_duration(total_duration))
+            .with_duration(total_duration)
+            .with_start(0)
+            )
     
     # 4. Composición y Exportación Final
     final_video = CompositeVideoClip([
