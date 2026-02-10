@@ -34,31 +34,20 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                             .resized(height=H)
                             .with_position('center')
                             .resized(lambda t: 1 + 0.04 * t)
-                            .with_duration(duration_per_clip))
-        
-        # Aplicamos fadein y fadeout usando la nueva sintaxis vfx.
-        img_clip = img_clip.with_effects([
-                    vfx.FadeIn(0.5), 
-                    vfx.FadeOut(0.5)
-                ])
+                            .with_duration(duration_per_clip)
+                            .with_effects([vfx.FadeIn(0.5), vfx.FadeOut(0.5)]))
 
         # --- POWER WORD (SUBTÍTULO LUXURY) ---
         txt_word = (TextClip(
-                        text=keyword.upper(), 
-                        font_size=75, 
-                        color='white', 
-                        font=FONT_LIGHT,
-                        kerning=12, # Espaciado elegante
-                        method='caption'
-                    )
-                    .with_position(('center', H * 0.70))
-                    .with_duration(duration_per_clip))
-        
-        # Aplicamos efectos al texto también
-        txt_word = txt_word.with_effects([
-            vfx.FadeIn(0.5), 
-            vfx.FadeOut(0.5)
-        ])
+                                text=keyword.upper(), 
+                                font_size=80, 
+                                color='white', 
+                                font=FONT_LIGHT,
+                                size=(W, None) # Centrado automático por ancho
+                            )
+                            .with_position(('center', H * 0.70))
+                            .with_duration(duration_per_clip)
+                            .with_effects([vfx.FadeIn(0.5), vfx.FadeOut(0.5)]))
         
         # Montamos la escena
         scene_combined = CompositeVideoClip([img_clip, txt_word], size=(W, H))
