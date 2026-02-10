@@ -29,6 +29,7 @@ for folder in folders:
 # --- 3. SERVIDO DE ARCHIVOS ---
 # Montamos la carpeta assets para que los videos y el grano sean accesibles vía URL
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Servimos los archivos del frontend (HTML y Assets de diseño)
 # Asumiendo que index.html y Background_Grain.jpg están en app/static/
