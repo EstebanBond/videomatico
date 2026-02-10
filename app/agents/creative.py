@@ -17,9 +17,14 @@ async def creative_node(state: GraphState):
     print("🧠 Agente Creativo: Diseñando la campaña de esentia...")
     
     prompt = """
-    Actúa como un Director Creativo Senior para 'esentia', una marca de lujo de fragancias ambientales.
+    Actúa como Director Creativo para 'esentia'. 
     
-    Tu misión es diseñar un video vertical de 5 escenas que evoque:
+    IMPORTANTE PARA LA SEGURIDAD:
+    - No uses palabras que puedan interpretarse como contenido sensual o humano explícito.
+    - Enfócate en objetos: botellas de perfume, madera de cedro, texturas de cuero, luz ambiental.
+    - Los image_prompts deben ser puramente descriptivos de arquitectura y diseño de interiores.
+    
+    Tu misión es diseñar un video vertical de 5 escenas para un video de fragancias de lujo, que evoque:
     - Notas olfativas: Cuero premium y maderas nobles (cedro, sándalo).
     - Estética: Lujo minimalista, espacios despejados, iluminación cinemática.
     - Emoción: Calma, exclusividad y sofisticación.

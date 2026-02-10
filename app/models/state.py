@@ -22,7 +22,7 @@ class GraphState(TypedDict):
     # Rutas de archivos generados
     image_paths: List[str]
     audio_path: Optional[str]
-    final_video_path: Optional[str]
+    video_url: Optional[str] 
     
     # Control de flujo
     error_message: Optional[str]
