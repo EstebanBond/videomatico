@@ -77,7 +77,16 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
     final = final.with_audio(audio)
     
     print(f"🎬 Renderizando video final en: {output_path}")
-    final.write_videofile(output_path, fps=24, codec="libx264", audio_codec="aac")
+
+    final.write_videofile(
+        output_path, 
+        fps=24, 
+        codec="libx264", 
+        audio_codec="aac",
+        temp_audiofile="temp-audio.m4a",
+        remove_temp=True,
+        pixel_format="yuv420p" 
+)
     
     # Limpieza de memoria (Previene errores de FFMPEG_AudioReader)
     audio.close()
