@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips, vfx
+from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips, vfx, afx
 from moviepy.audio.AudioClip import CompositeAudioClip
 
 # Configuración de rutas
@@ -86,9 +86,9 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                     .with_duration(total_video_duration))
         final_audio = CompositeAudioClip([voice_audio, bg_audio])
         # Fade out de 2 segundos al final del audio total
-        final_audio = final_audio.with_effects([vfx.AudioFadeOut(2)])
+        final_audio = final_audio.with_effects([afx.AudioFadeOut(2)])
     else:
-        final_audio = voice_audio.with_effects([vfx.AudioFadeOut(1)])
+        final_audio = voice_audio.with_effects([afx.AudioFadeOut(1)])
 
     # 4. CAPAS ESTÁTICAS (DEGRADADO Y LOGO ARRIBA)
     gradiente_top = (crear_degradado_top(W, 200) # 200px de degradado para suavidad
