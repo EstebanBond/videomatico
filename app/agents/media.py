@@ -1,97 +1,81 @@
 import os
 import asyncio
-from google.cloud import aiplatform
-from google.cloud import texttospeech
-from vertexai.preview.vision_models import ImageGenerationModel
+import requests
+from openai import OpenAI
 from app.models.state import GraphState
 
-# Inicialización de servicios de Google Cloud
-# Nota: Asegúrate de tener configuradas tus credenciales de Google Cloud
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/google-auth.json"
+# Inicializamos el cliente de OpenAI con tu llave del .env
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def generate_image_task(prompt: str, scene_num: int):
-    """Tarea asíncrona para generar una imagen con Imagen 3 en Vertex AI."""
-    print(f"🎨 Generando imagen para escena {scene_num}...")
+    """Genera imágenes de lujo con DALL-E 3."""
+    print(f"🎨 Generando imagen DALL-E 3 para escena {scene_num}...")
     
-    # En un entorno real de Vertex AI:
-    # model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-001")
-    # response = model.generate_images(prompt=prompt)
-    # path = f"assets/inputs/scene_{scene_num}.png"
-    # response[0].save(location=path, include_generation_parameters=False)
-    
-    # Simulación para desarrollo local (Placeholders elegantes)
-    await asyncio.sleep(2) # Simula latencia de red
-    path = f"assets/inputs/scene_{scene_num}.png"
-    return path
+    try:
+        # DALL-E 3 es increíble para prompts de lujo
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=f"Fotografía cinematográfica 4k, estilo lujo minimalista: {prompt}",
+            size="1024x1792", # Formato vertical para redes sociales
+            quality="standard",
+            n=1,
+        )
+        
+        image_url = response.data[0].url
+        path = f"assets/inputs/scene_{scene_num}.png"
+        os.makedirs("assets/inputs", exist_ok=True)
+
+        # Descargamos la imagen al Droplet
+        img_data = requests.get(image_url).content
+        with open(path, 'wb') as handler:
+            handler.write(img_data)
+            
+        return path
+    except Exception as e:
+        print(f"❌ Error en DALL-E: {e}")
+        return None
 
 async def generate_voiceover_task(text_list: list):
-    """Genera un solo archivo de audio uniendo todos los guiones de las escenas."""
-    print("🎙️ Generando locución premium con Google TTS...")
+    """Genera locución premium con OpenAI TTS."""
+    print("🎙️ Generando locución OpenAI (Modelo: Onyx)...")
     
-    client = texttospeech.TextToSpeechClient()
     full_text = " ".join(text_list)
-    
-    synthesis_input = texttospeech.SynthesisInput(text=full_text)
-    
-    # Voz de lujo: Usamos una voz 'Neural' o 'Studio' para máxima calidad
-    voice = texttospeech.VoiceSelectionParams(
-        language_code="es-ES",
-        name="es-ES-Neural2-F", # Voz femenina neural de alta calidad
-        ssml_gender=texttospeech.SsmlVoiceGender.FEMALE,
-    )
-    
-    audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3,
-        pitch=0.0,
-        speaking_rate=0.9 # Un poco más lento para tono de lujo
-    )
-
-    # Nota: Esta llamada es síncrona en el SDK de Google, 
-    # por eso la envolvemos en el hilo de ejecución asíncrono
-    response = client.synthesize_speech(
-        input=synthesis_input, voice=voice, audio_config=audio_config
-    )
-
     path = "assets/audio/voiceover.mp3"
-    with open(path, "wb") as out:
-        out.write(response.audio_content)
-    
-    return path
+    os.makedirs("assets/audio", exist_ok=True)
+
+    try:
+        # 'onyx' es una voz profunda y profesional, ideal para fragancias
+        response = client.audio.speech.create(
+            model="tts-1",
+            voice="onyx", 
+            input=full_text
+        )
+        
+        response.stream_to_file(path)
+        return path
+    except Exception as e:
+        print(f"❌ Error en OpenAI TTS: {e}")
+        return None
 
 async def media_node(state: GraphState):
     project = state.get("project_data")
-    
-    # 🚨 VALIDACIÓN DE SEGURIDAD (Nivel Senior)
-    if project is None:
-        print("❌ ERROR: El Director Creativo no generó datos del proyecto.")
-        return {
-            "error_message": "El agente creativo falló al generar el guion.",
-            "status": "failed"
-        }
+    if not project: return {"status": "failed"}
 
     scenes = project.scenes
     voice_texts = [s.voiceover_text for s in scenes]
     
     try:
-        # 🚀 LANZAMIENTO EN PARALELO (Grandes Ligas)
-        # Generamos las 5 imágenes y el audio al mismo tiempo
+        # Ejecución en paralelo para ahorrar tiempo
         image_tasks = [generate_image_task(s.image_prompt, s.num) for s in scenes]
         audio_task = generate_voiceover_task(voice_texts)
         
-        # Esperamos a que todas las tareas terminen
         results = await asyncio.gather(*image_tasks, audio_task)
         
-        image_paths = results[:-1]
-        audio_path = results[-1]
-        
         return {
-            "image_paths": image_paths,
-            "audio_path": audio_path,
+            "image_paths": results[:-1],
+            "audio_path": results[-1],
             "status": "media_assets_generated"
         }
-        
     except Exception as e:
-        return {
-            "error_message": f"Error en Agente de Medios: {str(e)}",
-            "status": "failed"
-        }
+        print(f"❌ Error en Agente de Medios: {e}")
+        return {"status": "failed"}
