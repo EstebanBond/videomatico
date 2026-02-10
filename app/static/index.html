@@ -73,7 +73,7 @@
             text-align: center;
             
             /* 1. CAMBIO CLAVE: Usamos un blanco con poquísima opacidad */
-            background: rgba(255, 255, 255, 0.27);
+            background: rgba(255, 255, 255, 0.13);
             
             /* 2. El desenfoque hará el resto del trabajo para que se note el cristal */
             backdrop-filter: blur(25px);
@@ -93,6 +93,7 @@
             letter-spacing: 8px;
             margin-bottom: 8px;
             text-transform: uppercase;
+            color: #ffffff;
         }
         .logo-section .bold {
             font-weight: 700;
@@ -100,8 +101,9 @@
         .logo-section p {
             font-size: 0.7rem;
             letter-spacing: 4px;
-            opacity: 0.5;
+            /* opacity: 0.5;  <--- ELIMINA O COMENTA ESTA LÍNEA si existía */
             margin-bottom: 50px;
+            color: rgba(255, 255, 255, 0.6); /* <--- USA ESTO: Blanco al 60% de opacidad */
         }
 
         /* --- BOTONES --- */
@@ -172,8 +174,8 @@
 
     <div class="glass-card">
         <div class="logo-section">
-            <h1>Esentia <span class="bold">AI</span></h1>
-            <p>Cinematic Production Engine</p>
+            <h1>Esentia</h1>
+            <p>Speed to Market</p>
         </div>
 
         <div id="ui-start">
