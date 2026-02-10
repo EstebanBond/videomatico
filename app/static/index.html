@@ -36,9 +36,9 @@
             height: 100%;
             z-index: -1;
         /* 1. Cargamos el grano y el degradado juntos */
-        background-image: 
-            url('Background_Grain.jpg'), 
-            radial-gradient(circle at center, #222222 0%, #000000 100%);
+            background-image: 
+                url('/assets/Background_Grain.jpg'), 
+                radial-gradient(circle at center, #222222 0%, #000000 100%);
         
         /* 2. El truco maestro: Mezclamos la imagen con el color */
         /* 'overlay' hace que el grano resalte sobre los grises */
@@ -49,7 +49,7 @@
         background-repeat: repeat, no-repeat;
         
         /* 4. Opacidad controlada */
-        opacity: 0.4; /* Ahora podemos subirla más porque se mezcla mejor */
+        opacity: 0.35; /* Ahora podemos subirla más porque se mezcla mejor */
 
         }
 
@@ -74,7 +74,7 @@
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             background: rgba(0, 0, 0, 0.4); /* Más oscuro para que el grano del fondo luzca más */
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 0 80px rgba(0,0,0,0.8);
         }
 
@@ -188,34 +188,60 @@
         </div>
     </div>
 
-    <script>
-        const btn = document.getElementById('mainAction');
-        const msg = document.getElementById('loading-msg');
-        
-        const steps = [
-            "Generating Script...",
-            "Synthesizing Visuals...",
-            "Vocal Engineering...",
-            "Final Rendering..."
-        ];
+<script>
+    const btn = document.getElementById('mainAction');
+    const msg = document.getElementById('loading-msg');
+    const uiStart = document.getElementById('ui-start');
+    const uiLoading = document.getElementById('ui-loading');
+    const uiSuccess = document.getElementById('ui-success');
 
-        btn.addEventListener('click', () => {
-            document.getElementById('ui-start').classList.add('hidden');
-            document.getElementById('ui-loading').classList.remove('hidden');
+    const steps = [
+        "Analyzing Concept...",
+        "Generating Script...",
+        "Synthesizing Visuals...",
+        "Vocal Engineering...",
+        "Final Rendering..."
+    ];
 
-            let i = 0;
-            const interval = setInterval(() => {
-                msg.textContent = steps[i];
-                i++;
-                if(i >= steps.length) clearInterval(interval);
-            }, 5000);
+    btn.addEventListener('click', async () => {
+        // 1. Cambiar a estado de carga
+        uiStart.classList.add('hidden');
+        uiLoading.classList.remove('hidden');
 
-            // Simulación de éxito
-            setTimeout(() => {
-                document.getElementById('ui-loading').classList.add('hidden');
-                document.getElementById('ui-success').classList.remove('hidden');
-            }, 20000); // Ajusta según el tiempo real de tu servidor
-        });
-    </script>
+        // 2. Animar los textos de estado
+        let stepIndex = 0;
+        const textInterval = setInterval(() => {
+            if (stepIndex < steps.length - 1) {
+                stepIndex++;
+                msg.textContent = steps[stepIndex];
+            }
+        }, 30000); // Cambia cada 30 segundos
+
+        try {
+            // 3. LLAMADA REAL AL BACKEND
+            // Cambia esta URL si tu API está en otro puerto o dirección
+            const response = await fetch('https://videomatico.sikno.com.mx/generate-esentia-ad/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                // 4. Éxito: Mostrar botones de descarga
+                clearInterval(textInterval);
+                uiLoading.classList.add('hidden');
+                uiSuccess.classList.remove('hidden');
+            } else {
+                throw new Error('Error en la generación');
+            }
+
+        } catch (error) {
+            clearInterval(textInterval);
+            alert("Hubo un problema con el servidor. Revisa los logs del Droplet.");
+            uiLoading.classList.add('hidden');
+            uiStart.classList.remove('hidden');
+        }
+    });
+</script>
+
 </body>
 </html>
