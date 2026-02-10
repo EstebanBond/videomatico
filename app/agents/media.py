@@ -47,7 +47,7 @@ async def generate_voiceover_task(text_list: list):
         # 'onyx' es una voz profunda y profesional, ideal para fragancias
         response = client.audio.speech.create(
             model="tts-1",
-            voice="onyx", 
+            voice="shimmer", 
             input=full_text
         )
         

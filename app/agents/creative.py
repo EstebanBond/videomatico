@@ -34,7 +34,11 @@ async def creative_node(state: GraphState):
     - Escenas 2-4: Transición entre texturas (cuero/madera) y el producto.
     - Escena 5: Cierre con la frase "Los detalles viven en el alma".
 
-    Asegúrate de que los image_prompts sean detallados y de estilo fotorealista 4k.
+    PARA CADA ESCENA DEBES GENERAR:
+    1. image_prompt: Descripción fotorealista 4k de lujo minimalista.
+    2. voiceover_text: El guion breve y elegante.
+    3. overlay_text: Una SOLA palabra poderosa (ej: ESENCIA, ALMA, PUREZA) 
+        que aparecerá en pantalla. Máximo 12 caracteres.
     """
 
     try:
