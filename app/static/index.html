@@ -35,31 +35,26 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-        /* 1. Cargamos el grano y el degradado juntos */
-            background-image: 
-                url('/assets/Background_Grain.jpg'), 
-                radial-gradient(circle at center, #222222 0%, #000000 100%);
-        
-        /* 2. El truco maestro: Mezclamos la imagen con el color */
-        /* 'overlay' hace que el grano resalte sobre los grises */
-        background-blend-mode: overlay;
-        
-        /* 3. Ajuste de escala para que el grano no se vea pixelado */
-        background-size: 500px auto, cover; /* El grano se repite pequeño para más nitidez */
-        background-repeat: repeat, no-repeat;
-        
-        /* 4. Opacidad controlada */
-        opacity: 0.35; /* Ahora podemos subirla más porque se mezcla mejor */
-
+            
+            /* 1. Fondo Gris Oscuro con Degradado */
+            background: radial-gradient(circle at center, #222 0%, #000 100%);
         }
 
-        .bg-grain {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('/static/Background_Grain.png'); /* O .png según tu archivo */
-            opacity: 0.12;
+        .bg-main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            /* 2. Generamos el grano mediante un SVG dinámico */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            
+            /* 3. Ajustes de visibilidad */
+            opacity: 0.04; /* Controla qué tan fuerte es el grano (0.04 es muy sutil y pro) */
             pointer-events: none;
-            z-index: 0;
+            mix-blend-mode: screen;
         }
 
         /* --- TARJETA DE CRISTAL (GLASSMORPHISM) --- */
@@ -169,8 +164,7 @@
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    <div class="bg-grain"></div>
+    <div class="bg-main"></div>
 
     <div class="glass-card">
         <div class="logo-section">
@@ -191,10 +185,10 @@
             <p class="status-text" style="margin-bottom: 30px; opacity: 1;">Proyecto Completo</p>
             
             <a href="https://videomatico.sikno.com.mx/assets/outputs/esentia_final_ad.mp4" 
-               download class="btn btn-secondary">Descargar Video</a>
+                download class="btn btn-secondary">Descargar Video</a>
             
             <a href="https://videomatico.sikno.com.mx/assets/outputs/esentia_final_ad.mp4" 
-               target="_blank" class="btn btn-primary">Ver Video</a>
+                target="_blank" class="btn btn-primary">Ver Video</a>
         </div>
     </div>
 
