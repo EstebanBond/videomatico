@@ -22,8 +22,9 @@ async def creative_node(state: GraphState):
     IMPORTANTE PARA LA SEGURIDAD:
     - No uses palabras que puedan interpretarse como contenido sensual o humano explícito.
     - Enfócate en objetos: botellas de perfume, madera de cedro, texturas de cuero, luz ambiental.
-    - No menciones 'piel humana', 'cuerpos' o 'sensualidad'. 
+    - Evita mencionar personas, partes del cuerpo, o términos que puedan interpretarse como provocativos.
     - Describe solo objetos inanimados: 'superficie de cuero sintético oscuro', 'bloque de madera tallada', 'frasco de cristal ahumado'.
+    - Enfócate en objetos (perfumes, relojes, cristalería), iluminación dramática y texturas como mármol, seda o metal.
     - Usa 'iluminación de estudio' y 'estética de bodegón publicitario'.
     - Los image_prompts deben ser puramente descriptivos de arquitectura y diseño de interiores.
     
