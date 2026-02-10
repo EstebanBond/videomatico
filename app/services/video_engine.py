@@ -1,5 +1,5 @@
 import os
-from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips
+from moviepy import TextClip, ImageClip, ColorClip, CompositeVideoClip, AudioFileClip, concatenate_videoclips, vfx
 from moviepy.audio.AudioClip import CompositeAudioClip
 
 # Configuración de rutas
@@ -25,12 +25,13 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
         # --- EFECTO KEN BURNS (ZOOM SUAVE) ---
         # Definimos una función de redimensionado que crece un 10% durante la escena
         img_clip = (ImageClip(img_path)
-                    .resized(height=H) # Ajuste inicial para cubrir el lienzo
-                    .with_position('center')
-                    .resized(lambda t: 1 + 0.04 * t) # Zoom in del 4% por segundo
-                    .with_duration(duration_per_clip)
-                    .with_fadein(0.5)
-                    .with_fadeout(0.5))
+                            .resized(height=H)
+                            .with_position('center')
+                            .resized(lambda t: 1 + 0.04 * t)
+                            .with_duration(duration_per_clip))
+        
+        # Aplicamos fadein y fadeout usando la nueva sintaxis .fx
+        img_clip = img_clip.fx(vfx.fadein, 0.5).fx(vfx.fadeout, 0.5)
 
         # --- POWER WORD (SUBTÍTULO LUXURY) ---
         txt_word = (TextClip(
@@ -43,6 +44,9 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                     )
                     .with_position(('center', H * 0.70))
                     .with_duration(duration_per_clip))
+        
+        #Fade en palabras
+        txt_word = txt_word.fx(vfx.fadein, 0.5).fx(vfx.fadeout, 0.5)
         
         # Montamos la escena
         scene_combined = CompositeVideoClip([img_clip, txt_word], size=(W, H))
