@@ -64,11 +64,14 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
                         font=FONT_BOLD,
                         method='caption',
                         text_align='center',
-                        size=(W * 0.8, None) 
+                        size=(int(W * 0.8), None)
                     )
-                    .with_position(('center', H * 0.65))
+                    .with_position(('center', int(H * 0.65))) 
                     .with_duration(duracion_actual)
-                    .with_effects([vfx.FadeIn(0.5), vfx.FadeOut(0.5)]))
+                    .with_effects([
+                        vfx.FadeIn(0.5), 
+                        vfx.FadeOut(0.5)
+                    ]))
         
         scene_combined = CompositeVideoClip([img_clip, txt_word], size=(W, H))
         clips.append(scene_combined)
@@ -94,8 +97,8 @@ def build_esentia_engine(project_data, image_paths, audio_path, output_path):
     logo = None
     if os.path.exists(LOGO_PATH):
         logo = (ImageClip(LOGO_PATH)
-                .resized(height=75)
-                .with_position(('center', 100)) # 40px desde arriba
+                .resized(height=80)
+                .with_position(('center', 120)) # 40px desde arriba
                 .with_duration(total_video_duration)
                 .with_start(0))
 
